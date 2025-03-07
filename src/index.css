@@ -5,65 +5,26 @@
 
 @layer base {
   :root {
-    --background: 210 40% 98%;
-    --foreground: 222.2 84% 4.9%;
-
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-
-    --primary: 200 98% 39%;
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 199 89% 96%;
-    --secondary-foreground: 200 98% 39%;
-
+    --background: 0 0% 100%;
+    --foreground: 222.2 47.4% 11.2%;
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 47.4% 11.2%;
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 200 98% 39%;
-
-    --radius: 0.8rem;
-  }
-
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 200 98% 39%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 47.4% 11.2%;
+    --primary: 170 98% 30%; /* brand-teal */
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 5% 95%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --accent: 329 70% 60%; /* Medical Pink */
     --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
+    --destructive: 0 100% 50%;
     --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --ring: 215 20.2% 65.1%;
+    --radius: 0.5rem;
   }
 }
 
@@ -71,7 +32,6 @@
   * {
     @apply border-border;
   }
-
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
@@ -79,42 +39,115 @@
 }
 
 @layer components {
-  .glass-card {
-    @apply bg-white/80 backdrop-blur-lg border border-white/20 shadow-glass rounded-2xl;
-  }
-  
-  .glass-card-lg {
-    @apply bg-white/90 backdrop-blur-xl border border-white/30 shadow-glass-lg rounded-2xl;
+  .input-primary {
+    @apply w-full px-4 py-2 border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-brand-300 focus:border-transparent transition-all;
   }
   
   .btn-primary {
-    @apply bg-brand-500 hover:bg-brand-600 text-white font-medium py-2.5 px-5 rounded-xl 
-    transition-all duration-300 ease-in-out shadow-lg hover:shadow-xl
-    hover:-translate-y-0.5 active:translate-y-0 active:shadow-md;
+    @apply px-6 py-3 bg-brand-500 hover:bg-brand-600 text-white font-medium rounded-lg transition-colors shadow-sm;
   }
   
   .btn-secondary {
-    @apply bg-secondary text-brand-600 font-medium py-2.5 px-5 rounded-xl 
-    transition-all duration-300 ease-in-out shadow-md hover:shadow-lg
-    hover:-translate-y-0.5 active:translate-y-0 active:shadow-sm;
+    @apply px-6 py-3 bg-white hover:bg-gray-50 text-gray-800 font-medium rounded-lg border border-gray-200 transition-colors shadow-sm;
   }
   
-  .input-primary {
-    @apply w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-brand-300
-    focus:border-transparent outline-none transition-all duration-200;
-  }
-  
-  .card-hover {
-    @apply transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:bg-white/100;
+  .glass-card-lg {
+    @apply rounded-xl bg-white bg-opacity-80 backdrop-blur-sm border border-gray-100 shadow-sm;
   }
   
   .nav-link {
-    @apply relative px-3 py-2 text-gray-700 hover:text-brand-500 transition-colors duration-200
-    after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:w-0 after:bg-brand-400
-    after:transition-all after:duration-300 hover:after:w-full;
+    @apply px-3 py-2 text-gray-700 hover:text-brand-600 font-medium rounded-lg transition-colors;
   }
   
   .nav-link-active {
-    @apply text-brand-500 after:w-full after:bg-brand-400;
+    @apply text-brand-600 bg-brand-50;
   }
+}
+
+/* Animations */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes pulse-gentle {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@layer utilities {
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  .animate-pulse-gentle {
+    animation: pulse-gentle 2s ease-in-out infinite;
+  }
+  
+  .animate-fade-in {
+    animation: fade-in 0.5s ease-out forwards;
+  }
+  
+  .animate-scale-in {
+    animation: scale-in 0.5s ease-out forwards;
+  }
+  
+  .shadow-glass-lg {
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  }
+}
+
+/* Custom Themes */
+:root {
+  --brand-50: #EBFBF8;
+  --brand-100: #D6F6F2;
+  --brand-200: #ADEEE5;
+  --brand-300: #85E5D8;
+  --brand-400: #5CDCCA;
+  --brand-500: #24CEBC;
+  --brand-600: #1DA596;
+  --brand-700: #177C71;
+  --brand-800: #11534B;
+  --brand-900: #0A2A26;
+  
+  --medicalpink-50: #FEF1F7;
+  --medicalpink-100: #FDE3EF;
+  --medicalpink-200: #FBC5DF;
+  --medicalpink-300: #F9A8CF;
+  --medicalpink-400: #F68ABF;
+  --medicalpink-500: #F36CAF;
+  --medicalpink-600: #C2578C;
+  --medicalpink-700: #914169;
+  --medicalpink-800: #612B47;
+  --medicalpink-900: #301623;
 }

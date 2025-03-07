@@ -1,12 +1,13 @@
 
 import { useState } from "react";
 import { Search, ShoppingCart, Menu, User, Bell, X } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const location = useLocation();
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   
@@ -14,6 +15,10 @@ const Header = () => {
     e.preventDefault();
     console.log("Searching for:", searchQuery);
     // Search functionality will be implemented in the future
+  };
+
+  const isActive = (path: string) => {
+    return location.pathname === path;
   };
 
   return (
@@ -33,10 +38,42 @@ const Header = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-1">
-            <Link to="/" className="nav-link nav-link-active">Home</Link>
-            <Link to="/reminders" className="nav-link">Reminders</Link>
-            <Link to="/pharmacy" className="nav-link">Pharmacy</Link>
-            <Link to="/contact" className="nav-link">Contact</Link>
+            <Link 
+              to="/" 
+              className={cn(
+                "nav-link",
+                isActive("/") && "nav-link-active"
+              )}
+            >
+              Home
+            </Link>
+            <Link 
+              to="/reminders" 
+              className={cn(
+                "nav-link",
+                isActive("/reminders") && "nav-link-active"
+              )}
+            >
+              Reminders
+            </Link>
+            <Link 
+              to="/pharmacy" 
+              className={cn(
+                "nav-link",
+                isActive("/pharmacy") && "nav-link-active"
+              )}
+            >
+              Pharmacy
+            </Link>
+            <Link 
+              to="/contact" 
+              className={cn(
+                "nav-link",
+                isActive("/contact") && "nav-link-active"
+              )}
+            >
+              Contact
+            </Link>
           </nav>
 
           {/* Search Bar - Desktop */}
@@ -131,35 +168,50 @@ const Header = () => {
         <nav className="flex flex-col space-y-4 p-6">
           <Link 
             to="/" 
-            className="text-lg font-medium p-2 hover:bg-gray-50 rounded-lg"
+            className={cn(
+              "text-lg font-medium p-2 hover:bg-gray-50 rounded-lg",
+              isActive("/") && "text-brand-500 bg-brand-50"
+            )}
             onClick={toggleMenu}
           >
             Home
           </Link>
           <Link 
             to="/reminders" 
-            className="text-lg font-medium p-2 hover:bg-gray-50 rounded-lg"
+            className={cn(
+              "text-lg font-medium p-2 hover:bg-gray-50 rounded-lg",
+              isActive("/reminders") && "text-brand-500 bg-brand-50"
+            )}
             onClick={toggleMenu}
           >
             Reminders
           </Link>
           <Link 
             to="/pharmacy" 
-            className="text-lg font-medium p-2 hover:bg-gray-50 rounded-lg"
+            className={cn(
+              "text-lg font-medium p-2 hover:bg-gray-50 rounded-lg",
+              isActive("/pharmacy") && "text-brand-500 bg-brand-50"
+            )}
             onClick={toggleMenu}
           >
             Pharmacy
           </Link>
           <Link 
             to="/contact" 
-            className="text-lg font-medium p-2 hover:bg-gray-50 rounded-lg"
+            className={cn(
+              "text-lg font-medium p-2 hover:bg-gray-50 rounded-lg",
+              isActive("/contact") && "text-brand-500 bg-brand-50"
+            )}
             onClick={toggleMenu}
           >
             Contact
           </Link>
           <Link 
             to="/profile" 
-            className="text-lg font-medium p-2 hover:bg-gray-50 rounded-lg"
+            className={cn(
+              "text-lg font-medium p-2 hover:bg-gray-50 rounded-lg",
+              isActive("/profile") && "text-brand-500 bg-brand-50"
+            )}
             onClick={toggleMenu}
           >
             My Profile
