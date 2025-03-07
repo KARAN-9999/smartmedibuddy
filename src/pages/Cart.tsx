@@ -71,50 +71,9 @@ const Cart = () => {
     });
   };
 
-  const handleCheckout = async () => {
-    setIsCheckingOut(true);
-    
-    try {
-      // Prepare order details
-      const orderDetails = {
-        items: cartItems,
-        subtotal: subtotal,
-        shipping: shipping,
-        tax: tax,
-        total: total,
-        date: new Date().toISOString(),
-      };
-      
-      // Process the order
-      const success = await processOrder(orderDetails);
-      
-      if (success) {
-        setOrderComplete(true);
-        
-        // Clear cart after successful order
-        setTimeout(() => {
-          setCartItems([]);
-          setIsCheckingOut(false);
-          setOrderComplete(false);
-          
-          toast({
-            title: "Order placed successfully!",
-            description: "Thank you for your purchase. Your order has been confirmed.",
-            duration: 5000,
-          });
-          
-          navigate("/");
-        }, 2000);
-      }
-    } catch (error) {
-      setIsCheckingOut(false);
-      toast({
-        title: "Checkout failed",
-        description: "There was an issue processing your order. Please try again.",
-        variant: "destructive",
-        duration: 5000,
-      });
-    }
+  const handleCheckout = () => {
+    // Navigate to payment page
+    navigate("/payment");
   };
 
   const subtotal = cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
@@ -226,20 +185,10 @@ const Cart = () => {
                   
                   <button 
                     onClick={handleCheckout}
-                    disabled={isCheckingOut}
                     className="btn-primary w-full mt-6 flex items-center justify-center"
                   >
-                    {isCheckingOut ? (
-                      <>
-                        <CheckCircle size={16} className="mr-2 animate-pulse" />
-                        <span>{orderComplete ? "Order Complete!" : "Processing..."}</span>
-                      </>
-                    ) : (
-                      <>
-                        <span>Proceed to Checkout</span>
-                        <ArrowRight size={16} className="ml-2" />
-                      </>
-                    )}
+                    <span>Proceed to Checkout</span>
+                    <ArrowRight size={16} className="ml-2" />
                   </button>
                   
                   <div className="mt-4 text-xs text-gray-500 text-center">

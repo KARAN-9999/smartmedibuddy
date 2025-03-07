@@ -11,6 +11,8 @@ import Reminders from "./pages/Reminders";
 import Pharmacy from "./pages/Pharmacy";
 import Profile from "./pages/Profile";
 import Cart from "./pages/Cart";
+import Auth from "./pages/Auth";
+import Payment from "./pages/Payment";
 import NotificationBar from "./components/NotificationBar";
 
 const queryClient = new QueryClient();
@@ -28,6 +30,8 @@ const App = () => (
           <Route path="/contact" element={<Contact />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/auth" element={<Auth />} />
+          <Route path="/payment" element={<Payment />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <NotificationBar />
