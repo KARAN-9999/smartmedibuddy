@@ -1,8 +1,9 @@
 
 import Layout from "@/components/Layout";
 import { useState } from "react";
-import { Trash2, Plus, Minus, ArrowRight, ShoppingBag } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Trash2, Plus, Minus, ArrowRight, ShoppingBag, CheckCircle } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "@/components/ui/use-toast";
 
 type CartItem = {
   id: string;
@@ -13,6 +14,7 @@ type CartItem = {
 };
 
 const Cart = () => {
+  const navigate = useNavigate();
   const [cartItems, setCartItems] = useState<CartItem[]>([
     {
       id: "1",
@@ -29,6 +31,8 @@ const Cart = () => {
       quantity: 1,
     },
   ]);
+  
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
 
   const updateQuantity = (id: string, newQuantity: number) => {
     if (newQuantity < 1) return;
@@ -36,10 +40,41 @@ const Cart = () => {
     setCartItems(cartItems.map(item => 
       item.id === id ? { ...item, quantity: newQuantity } : item
     ));
+    
+    toast({
+      title: "Cart updated",
+      description: "Item quantity has been updated",
+      duration: 2000,
+    });
   };
 
   const removeItem = (id: string) => {
+    const itemToRemove = cartItems.find(item => item.id === id);
     setCartItems(cartItems.filter(item => item.id !== id));
+    
+    toast({
+      title: "Item removed",
+      description: `${itemToRemove?.name} has been removed from your cart`,
+      duration: 3000,
+    });
+  };
+
+  const handleCheckout = () => {
+    setIsCheckingOut(true);
+    
+    // Simulate checkout process
+    setTimeout(() => {
+      setCartItems([]);
+      setIsCheckingOut(false);
+      
+      toast({
+        title: "Order placed successfully!",
+        description: "Thank you for your purchase. Your order has been confirmed.",
+        duration: 5000,
+      });
+      
+      navigate("/");
+    }, 2000);
   };
 
   const subtotal = cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
@@ -87,6 +122,7 @@ const Cart = () => {
                           <button 
                             onClick={() => updateQuantity(item.id, item.quantity - 1)}
                             className="p-1 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100"
+                            aria-label="Decrease quantity"
                           >
                             <Minus size={16} />
                           </button>
@@ -94,6 +130,7 @@ const Cart = () => {
                           <button 
                             onClick={() => updateQuantity(item.id, item.quantity + 1)}
                             className="p-1 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100"
+                            aria-label="Increase quantity"
                           >
                             <Plus size={16} />
                           </button>
@@ -147,9 +184,22 @@ const Cart = () => {
                     </div>
                   </div>
                   
-                  <button className="btn-primary w-full mt-6 flex items-center justify-center">
-                    <span>Proceed to Checkout</span>
-                    <ArrowRight size={16} className="ml-2" />
+                  <button 
+                    onClick={handleCheckout}
+                    disabled={isCheckingOut}
+                    className="btn-primary w-full mt-6 flex items-center justify-center"
+                  >
+                    {isCheckingOut ? (
+                      <>
+                        <CheckCircle size={16} className="mr-2 animate-pulse" />
+                        <span>Processing...</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>Proceed to Checkout</span>
+                        <ArrowRight size={16} className="ml-2" />
+                      </>
+                    )}
                   </button>
                   
                   <div className="mt-4 text-xs text-gray-500 text-center">

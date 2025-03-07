@@ -11,6 +11,7 @@ import Reminders from "./pages/Reminders";
 import Pharmacy from "./pages/Pharmacy";
 import Profile from "./pages/Profile";
 import Cart from "./pages/Cart";
+import NotificationBar from "./components/NotificationBar";
 
 const queryClient = new QueryClient();
 
@@ -29,6 +30,7 @@ const App = () => (
           <Route path="/cart" element={<Cart />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
+        <NotificationBar />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

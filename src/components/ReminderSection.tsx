@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { PlusCircle, Clock, Calendar, Edit, Trash2, Check, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { toast } from "@/components/ui/use-toast";
 
 type Reminder = {
   id: string;
@@ -37,6 +38,7 @@ const ReminderSection = () => {
   ]);
 
   const [isAddingNew, setIsAddingNew] = useState(false);
+  const [editingReminder, setEditingReminder] = useState<string | null>(null);
   const [newReminder, setNewReminder] = useState<Partial<Reminder>>({
     name: "",
     time: "",
@@ -59,11 +61,71 @@ const ReminderSection = () => {
       setReminders([...reminders, reminderToAdd]);
       setNewReminder({ name: "", time: "", dosage: "", days: [] });
       setIsAddingNew(false);
+      
+      toast({
+        title: "Reminder added",
+        description: `${reminderToAdd.name} has been added to your reminders`,
+        duration: 3000,
+      });
+    } else {
+      toast({
+        title: "Error",
+        description: "Please fill in all fields and select at least one day",
+        variant: "destructive",
+        duration: 3000,
+      });
     }
   };
 
   const handleDeleteReminder = (id: string) => {
+    const reminderToDelete = reminders.find(r => r.id === id);
     setReminders(reminders.filter(reminder => reminder.id !== id));
+    
+    toast({
+      title: "Reminder deleted",
+      description: `${reminderToDelete?.name} has been removed from your reminders`,
+      duration: 3000,
+    });
+  };
+
+  const handleEditReminder = (id: string) => {
+    const reminderToEdit = reminders.find(r => r.id === id);
+    if (reminderToEdit) {
+      setEditingReminder(id);
+      setNewReminder({
+        name: reminderToEdit.name,
+        time: reminderToEdit.time,
+        dosage: reminderToEdit.dosage,
+        days: [...reminderToEdit.days],
+      });
+      setIsAddingNew(true);
+    }
+  };
+
+  const handleSaveEdit = () => {
+    if (editingReminder && newReminder.name && newReminder.time && newReminder.dosage && newReminder.days?.length) {
+      setReminders(reminders.map(reminder => 
+        reminder.id === editingReminder 
+          ? {
+              ...reminder,
+              name: newReminder.name || reminder.name,
+              time: newReminder.time || reminder.time,
+              dosage: newReminder.dosage || reminder.dosage,
+              days: newReminder.days || reminder.days,
+            }
+          : reminder
+      ));
+      
+      setNewReminder({ name: "", time: "", dosage: "", days: [] });
+      setIsAddingNew(false);
+      setEditingReminder(null);
+      
+      toast({
+        title: "Reminder updated",
+        description: `${newReminder.name} has been updated`,
+        duration: 3000,
+      });
+    }
   };
 
   const toggleDay = (day: string) => {
@@ -80,6 +142,12 @@ const ReminderSection = () => {
         days: [...newReminder.days, day]
       });
     }
+  };
+
+  const handleCancel = () => {
+    setIsAddingNew(false);
+    setEditingReminder(null);
+    setNewReminder({ name: "", time: "", dosage: "", days: [] });
   };
 
   return (
@@ -152,6 +220,7 @@ const ReminderSection = () => {
                       <div className="flex space-x-1 ml-2">
                         <button 
                           className="p-1.5 text-gray-400 hover:text-brand-500 transition-colors rounded-full hover:bg-gray-100"
+                          onClick={() => handleEditReminder(reminder.id)}
                           aria-label="Edit reminder"
                         >
                           <Edit size={16} />
@@ -186,9 +255,11 @@ const ReminderSection = () => {
               {isAddingNew && (
                 <div className="glass-card-lg p-5 animate-fade-in">
                   <div className="flex justify-between items-center mb-4">
-                    <h4 className="font-semibold text-gray-900">Add New Reminder</h4>
+                    <h4 className="font-semibold text-gray-900">
+                      {editingReminder ? 'Edit Reminder' : 'Add New Reminder'}
+                    </h4>
                     <button 
-                      onClick={() => setIsAddingNew(false)}
+                      onClick={handleCancel}
                       className="text-gray-400 hover:text-gray-600 transition-colors"
                     >
                       <X size={20} />
@@ -260,17 +331,17 @@ const ReminderSection = () => {
                   
                   <div className="flex justify-end space-x-3 mt-2">
                     <button 
-                      onClick={() => setIsAddingNew(false)}
+                      onClick={handleCancel}
                       className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
                     >
                       Cancel
                     </button>
                     <button 
-                      onClick={handleAddReminder}
+                      onClick={editingReminder ? handleSaveEdit : handleAddReminder}
                       className="flex items-center space-x-1 px-4 py-2 bg-brand-500 text-white rounded-lg hover:bg-brand-600 transition-colors"
                     >
                       <Check size={18} />
-                      <span>Save Reminder</span>
+                      <span>{editingReminder ? 'Save Changes' : 'Save Reminder'}</span>
                     </button>
                   </div>
                 </div>

@@ -1,15 +1,26 @@
 
 import { useState } from "react";
 import { Calendar, Clock, BellRing, ArrowRight } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "@/components/ui/use-toast";
 
 const Hero = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    toast({
+      title: "Newsletter subscription successful",
+      description: `Thank you for subscribing with ${email}!`,
+      duration: 5000,
+    });
     console.log("Email submitted:", email);
-    // This would normally handle the newsletter signup
+    setEmail("");
+  };
+
+  const handleViewAll = () => {
+    navigate("/reminders");
   };
 
   return (
@@ -141,7 +152,10 @@ const Hero = () => {
                   <div className="text-sm text-gray-500">
                     Upcoming: <span className="text-gray-700 font-medium">3 medicines</span>
                   </div>
-                  <button className="text-sm font-medium text-brand-500 hover:text-brand-600 transition-colors">
+                  <button 
+                    onClick={handleViewAll}
+                    className="text-sm font-medium text-brand-500 hover:text-brand-600 transition-colors"
+                  >
                     View All
                   </button>
                 </div>

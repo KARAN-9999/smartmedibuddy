@@ -1,6 +1,8 @@
 
 import { useState } from "react";
 import { ShoppingCart, Filter, Plus, Search, Star } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "@/components/ui/use-toast";
 
 // Define medicine product type
 type Product = {
@@ -14,6 +16,7 @@ type Product = {
 };
 
 const PharmacySection = () => {
+  const navigate = useNavigate();
   // Sample products data
   const products: Product[] = [
     {
@@ -98,6 +101,18 @@ const PharmacySection = () => {
     } else {
       setCart([...cart, { id: productId, quantity: 1 }]);
     }
+    
+    // Show toast notification
+    toast({
+      title: "Added to cart",
+      description: "Item has been added to your cart",
+      duration: 3000,
+    });
+  };
+
+  // Handle view cart
+  const handleViewCart = () => {
+    navigate("/cart");
   };
 
   return (
@@ -211,7 +226,10 @@ const PharmacySection = () => {
                 <span className="font-medium">{cart.reduce((total, item) => total + item.quantity, 0)}</span>
                 <span className="text-gray-600"> items in your cart</span>
               </span>
-              <button className="btn-primary text-sm py-1.5">
+              <button 
+                onClick={handleViewCart}
+                className="btn-primary text-sm py-1.5"
+              >
                 View Cart
               </button>
             </div>

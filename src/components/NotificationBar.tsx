@@ -1,7 +1,9 @@
 
 import { useState, useEffect } from "react";
-import { Bell, X, Clock } from "lucide-react";
+import { Bell, X, Clock, CheckCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useNavigate } from "react-router-dom";
+import { toast } from "@/components/ui/use-toast";
 
 interface Notification {
   id: string;
@@ -9,9 +11,11 @@ interface Notification {
   message: string;
   time: string;
   type: "reminder" | "order" | "info";
+  link?: string;
 }
 
 const NotificationBar = () => {
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([
     {
@@ -19,21 +23,24 @@ const NotificationBar = () => {
       title: "Medicine Reminder",
       message: "Time to take your Amoxicillin (1 capsule)",
       time: "Now",
-      type: "reminder"
+      type: "reminder",
+      link: "/reminders"
     },
     {
       id: "2",
       title: "Order Shipped",
       message: "Your order #12345 has been shipped and will arrive tomorrow",
       time: "10 mins ago",
-      type: "order"
+      type: "order",
+      link: "/profile"
     },
     {
       id: "3",
       title: "Refill Reminder",
       message: "Your Lisinopril prescription is due for refill in 3 days",
       time: "1 hour ago",
-      type: "info"
+      type: "info",
+      link: "/pharmacy"
     }
   ]);
 
@@ -52,8 +59,40 @@ const NotificationBar = () => {
     };
   }, [isOpen]);
 
-  const dismissNotification = (id: string) => {
+  const dismissNotification = (id: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    const notificationToRemove = notifications.find(n => n.id === id);
     setNotifications(notifications.filter(notification => notification.id !== id));
+    
+    toast({
+      title: "Notification dismissed",
+      description: `"${notificationToRemove?.title}" has been removed`,
+      duration: 3000,
+    });
+  };
+
+  const handleNotificationAction = (notification: Notification) => {
+    setIsOpen(false);
+    if (notification.link) {
+      navigate(notification.link);
+    }
+    
+    if (notification.type === "reminder") {
+      toast({
+        title: "Reminder acknowledged",
+        description: "This medication has been marked as taken",
+        duration: 3000,
+      });
+    }
+  };
+
+  const markAllAsRead = () => {
+    setNotifications([]);
+    toast({
+      title: "All notifications cleared",
+      description: "All notifications have been marked as read",
+      duration: 3000,
+    });
   };
 
   const getNotificationColor = (type: string) => {
@@ -115,10 +154,11 @@ const NotificationBar = () => {
             notifications.map((notification) => (
               <div 
                 key={notification.id}
-                className="p-4 hover:bg-gray-50 transition-colors relative animate-fade-in"
+                onClick={() => handleNotificationAction(notification)}
+                className="p-4 hover:bg-gray-50 transition-colors relative animate-fade-in cursor-pointer"
               >
                 <button
-                  onClick={() => dismissNotification(notification.id)}
+                  onClick={(e) => dismissNotification(notification.id, e)}
                   className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 p-1"
                 >
                   <X size={14} />
@@ -140,6 +180,13 @@ const NotificationBar = () => {
                   <Clock size={12} className="mr-1" />
                   <span>{notification.time}</span>
                 </div>
+
+                {notification.type === "reminder" && (
+                  <button className="mt-2 flex items-center text-xs text-brand-600 font-medium">
+                    <CheckCircle size={14} className="mr-1" />
+                    <span>Mark as taken</span>
+                  </button>
+                )}
               </div>
             ))
           ) : (
@@ -152,7 +199,7 @@ const NotificationBar = () => {
         {notifications.length > 0 && (
           <div className="p-3 border-t border-gray-100">
             <button 
-              onClick={() => setNotifications([])}
+              onClick={markAllAsRead}
               className="text-sm text-center w-full text-brand-500 hover:text-brand-600"
             >
               Mark all as read

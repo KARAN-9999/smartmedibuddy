@@ -1,10 +1,12 @@
 
 import { useState } from "react";
 import { Search, ShoppingCart, Menu, User, Bell, X } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import { toast } from "@/components/ui/use-toast";
 
 const Header = () => {
+  const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const location = useLocation();
@@ -13,8 +15,19 @@ const Header = () => {
   
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Searching for:", searchQuery);
-    // Search functionality will be implemented in the future
+    if (searchQuery.trim()) {
+      console.log("Searching for:", searchQuery);
+      // In a real app, this would navigate to search results page
+      toast({
+        title: "Search initiated",
+        description: `Searching for "${searchQuery}"`,
+        duration: 3000,
+      });
+      
+      // For demo purposes, navigate to pharmacy with the search term
+      navigate(`/pharmacy?search=${encodeURIComponent(searchQuery)}`);
+      setSearchQuery("");
+    }
   };
 
   const isActive = (path: string) => {
@@ -100,6 +113,13 @@ const Header = () => {
             <button 
               className="p-2 rounded-full hover:bg-gray-100 transition-colors text-gray-700 hover:text-brand-500"
               aria-label="Notifications"
+              onClick={() => {
+                toast({
+                  title: "Notifications",
+                  description: "Use the notification bell in the bottom right corner to see your notifications",
+                  duration: 3000,
+                });
+              }}
             >
               <Bell size={20} />
             </button>
