@@ -1,6 +1,6 @@
 
 import Layout from "@/components/Layout";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Trash2, Plus, Minus, ArrowRight, ShoppingBag, CheckCircle } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "@/components/ui/use-toast";
@@ -13,6 +13,17 @@ type CartItem = {
   quantity: number;
 };
 
+// Simulated order processing function
+const processOrder = async (orderDetails: any): Promise<boolean> => {
+  // Simulate API call to process order
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      // Simulate successful order processing
+      resolve(true);
+    }, 2000);
+  });
+};
+
 const Cart = () => {
   const navigate = useNavigate();
   const [cartItems, setCartItems] = useState<CartItem[]>([
@@ -20,19 +31,20 @@ const Cart = () => {
       id: "1",
       name: "Paracetamol",
       price: 8.99,
-      image: "https://cdn.pixabay.com/photo/2016/12/05/19/49/pill-1884775_1280.jpg",
+      image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
       quantity: 2,
     },
     {
       id: "2",
       name: "Vitamin C",
       price: 12.49,
-      image: "https://cdn.pixabay.com/photo/2017/06/19/15/40/strawberry-2419023_1280.jpg",
+      image: "https://images.unsplash.com/photo-1584362917165-526a968579e8?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
       quantity: 1,
     },
   ]);
   
   const [isCheckingOut, setIsCheckingOut] = useState(false);
+  const [orderComplete, setOrderComplete] = useState(false);
 
   const updateQuantity = (id: string, newQuantity: number) => {
     if (newQuantity < 1) return;
@@ -59,22 +71,50 @@ const Cart = () => {
     });
   };
 
-  const handleCheckout = () => {
+  const handleCheckout = async () => {
     setIsCheckingOut(true);
     
-    // Simulate checkout process
-    setTimeout(() => {
-      setCartItems([]);
-      setIsCheckingOut(false);
+    try {
+      // Prepare order details
+      const orderDetails = {
+        items: cartItems,
+        subtotal: subtotal,
+        shipping: shipping,
+        tax: tax,
+        total: total,
+        date: new Date().toISOString(),
+      };
       
+      // Process the order
+      const success = await processOrder(orderDetails);
+      
+      if (success) {
+        setOrderComplete(true);
+        
+        // Clear cart after successful order
+        setTimeout(() => {
+          setCartItems([]);
+          setIsCheckingOut(false);
+          setOrderComplete(false);
+          
+          toast({
+            title: "Order placed successfully!",
+            description: "Thank you for your purchase. Your order has been confirmed.",
+            duration: 5000,
+          });
+          
+          navigate("/");
+        }, 2000);
+      }
+    } catch (error) {
+      setIsCheckingOut(false);
       toast({
-        title: "Order placed successfully!",
-        description: "Thank you for your purchase. Your order has been confirmed.",
+        title: "Checkout failed",
+        description: "There was an issue processing your order. Please try again.",
+        variant: "destructive",
         duration: 5000,
       });
-      
-      navigate("/");
-    }, 2000);
+    }
   };
 
   const subtotal = cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
@@ -192,7 +232,7 @@ const Cart = () => {
                     {isCheckingOut ? (
                       <>
                         <CheckCircle size={16} className="mr-2 animate-pulse" />
-                        <span>Processing...</span>
+                        <span>{orderComplete ? "Order Complete!" : "Processing..."}</span>
                       </>
                     ) : (
                       <>

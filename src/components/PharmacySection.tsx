@@ -17,14 +17,14 @@ type Product = {
 
 const PharmacySection = () => {
   const navigate = useNavigate();
-  // Sample products data
+  // Sample products data with improved images
   const products: Product[] = [
     {
       id: "1",
       name: "Paracetamol",
       description: "Pain reliever and fever reducer",
       price: 8.99,
-      image: "https://cdn.pixabay.com/photo/2016/12/05/19/49/pill-1884775_1280.jpg",
+      image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
       rating: 4.5,
       category: "Pain Relief"
     },
@@ -33,7 +33,7 @@ const PharmacySection = () => {
       name: "Vitamin C",
       description: "Immune system support supplement",
       price: 12.49,
-      image: "https://cdn.pixabay.com/photo/2017/06/19/15/40/strawberry-2419023_1280.jpg",
+      image: "https://images.unsplash.com/photo-1584362917165-526a968579e8?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
       rating: 4.8,
       category: "Vitamins"
     },
@@ -42,7 +42,7 @@ const PharmacySection = () => {
       name: "Ibuprofen",
       description: "Anti-inflammatory and pain relief",
       price: 7.99,
-      image: "https://cdn.pixabay.com/photo/2016/12/08/15/59/pill-1892168_1280.jpg",
+      image: "https://images.unsplash.com/photo-1607619056574-7b8d3ee536b2?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
       rating: 4.2,
       category: "Pain Relief"
     },
@@ -51,7 +51,7 @@ const PharmacySection = () => {
       name: "First Aid Kit",
       description: "Essential medical supplies for emergencies",
       price: 24.99,
-      image: "https://cdn.pixabay.com/photo/2014/12/10/21/01/first-aid-kit-563170_1280.jpg",
+      image: "https://images.unsplash.com/photo-1603398938378-e54eab446dde?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
       rating: 4.9,
       category: "First Aid"
     },
@@ -60,7 +60,7 @@ const PharmacySection = () => {
       name: "Multivitamin",
       description: "Daily essential vitamins and minerals",
       price: 15.49,
-      image: "https://cdn.pixabay.com/photo/2018/07/30/09/38/pharmacy-3572037_1280.jpg",
+      image: "https://images.unsplash.com/photo-1577174881658-0f30ed549adc?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
       rating: 4.7,
       category: "Vitamins"
     },
@@ -69,7 +69,7 @@ const PharmacySection = () => {
       name: "Hand Sanitizer",
       description: "Kills 99.9% of germs without water",
       price: 4.99,
-      image: "https://cdn.pixabay.com/photo/2020/04/28/05/06/disinfection-5102086_1280.jpg",
+      image: "https://images.unsplash.com/photo-1584483720412-ce931f4aefa8?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
       rating: 4.6,
       category: "Personal Care"
     },
